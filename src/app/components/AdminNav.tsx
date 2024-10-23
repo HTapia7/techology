@@ -1,7 +1,7 @@
 import React from "react"
 import CreateButton from "./CreateButton";
 
-export default function Nav(){
+const Nav = () => {
 
   let Links = [
     {name: "HOME", link: "/"},
@@ -31,3 +31,5 @@ export default function Nav(){
     </div>
   )
 }
+
+export default Nav
