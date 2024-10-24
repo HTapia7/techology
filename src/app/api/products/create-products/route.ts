@@ -1,17 +1,19 @@
 import { connect } from "@/dbConfig/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import Product from "@/models/product";
+import toast from "react-hot-toast";
 
 connect();
 
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { name, price, image } = reqBody;
+    // Add image later 
+    const { name, price, description , quantity} = reqBody;
 
-    if (!name || !price || !image) {
+    if (!name || !price || !description || !quantity) {
       return NextResponse.json(
-        { error: "Missing required fields: name, price, or image" },
+        { error: "Missing required fields: name, price, description or quantity " },
         { status: 400 }
       );
     }
@@ -21,7 +23,9 @@ export async function POST(request: NextRequest) {
     const newProduct = new Product({
       name,
       price,
-      image,
+      // image,
+      description,
+      quantity
     });
 
     const savedProduct = await newProduct.save();

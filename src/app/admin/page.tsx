@@ -1,11 +1,11 @@
 "use client"
 import React from 'react'
-import Nav from "../components/AdminNav"
+import Dashboard from '../components/Dashboard'
 
 const Adminpage = () => {
   return (
     <>
-    <Nav/>
+    <Dashboard/>
     </>
   )
 }

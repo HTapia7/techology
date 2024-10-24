@@ -1,12 +1,12 @@
 import React from "react"
-import CreateButton from "./CreateButton";
 
 const Nav = () => {
 
   let Links = [
     {name: "HOME", link: "/"},
-    {name: "INVENTORY", link: "/"},
-    {name: "PROFILE", link: "/"}
+    {name: "Product", link: "/"},
+    {name: "Sign Up", link: "/signup"},
+    {name: "Sign In", link: "/signin"}
   ];
 
   return (
@@ -26,7 +26,6 @@ const Nav = () => {
           ) )
         }
       </ul>
-      <CreateButton/>
       </div>
     </div>
   )
