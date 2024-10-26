@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  image: {
+  description: {
     type: String,
     required: true
   },
@@ -17,11 +17,15 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true
   }
+  // image: {
+  //   type: String,
+  //   required: true
+  // },
 }, {
   timestamps: true,
 });
 
-// Check if the Product model already exists, otherwise create a new model
+
 const Product = mongoose.models.Product || mongoose.model("Product", productSchema);
 
 export default Product;
