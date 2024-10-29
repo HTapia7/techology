@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import CreateButton from "./CreateButton";
+import UploadWidget from "./UploadWidget";
 
 const AdminNav = () => {
   const Links = [
@@ -26,6 +27,7 @@ const AdminNav = () => {
           ))}
         </ul>
         <CreateButton />
+        <UploadWidget/>
       </div>
     </div>
   );
