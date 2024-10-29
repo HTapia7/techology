@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -8,15 +8,18 @@ interface FormData {
   price: string;
   quantity: string;
   description: string;
+  image: string; // Image field for the uploaded image's public ID
 }
 
 const ProductModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     price: '',
     quantity: '',
     description: '',
+    image: '',
   });
 
   const toggleModal = () => {
@@ -28,29 +31,62 @@ const ProductModal = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formDataToSend = new FormData();
+    // Upload the image to Cloudinary
+    if (file) {
+      const formDataToUpload = new FormData();
+      formDataToUpload.append("file", file);
+      formDataToUpload.append("upload_preset", "your_upload_preset"); // Replace with your Cloudinary upload preset
 
-    for (const key in formData) {
-      formDataToSend.append(key, formData[key as keyof FormData]);
+      try {
+        const uploadResponse = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, formDataToUpload, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        // Get the secure URL of the uploaded image
+        const imageSecureUrl = uploadResponse.data.secure_url; // Cloudinary returns the URL
+        setFormData((prev) => ({ ...prev, image: imageSecureUrl })); // Update the image field with the URL
+
+      } catch (error) {
+        toast.error("Image upload failed. Please try again.", { duration: 10000 });
+        return; // Stop if image upload fails
+      }
     }
 
+    // Prepare the data for creating the product
+    const productData = {
+      name: formData.name,
+      price: formData.price,
+      quantity: formData.quantity,
+      description: formData.description,
+      image: formData.image, // Include the image URL
+    };
+
     try {
-      const response = await axios.post('/api/products/create-products', formDataToSend, {
+      const response = await axios.post('/api/products/create-products', productData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
-      toast.success(response.data.message , {duration: 10000})
-      // console.log('Form data submitted successfully:', response.data);
-      toggleModal();
+      toast.success(response.data.message, { duration: 10000 });
+      toggleModal(); // Close the modal on success
+      // Reset the form data
+      setFormData({ name: '', price: '', quantity: '', description: '', image: '' });
+      setFile(null); // Clear the file input
     } catch (error) {
-      toast.error("An error occurred while submitting the form. Please try again." , {duration: 10000})
-      // console.error('Error submitting form:', error);
-      // alert('An error occurred while submitting the form. Please try again.');
+      toast.error("An error occurred while submitting the form. Please try again.", { duration: 10000 });
     }
   };
 
@@ -61,7 +97,7 @@ const ProductModal = () => {
         className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
         type="button"
       >
-        Create Product  +
+        Create Product +
       </button>
 
       {isModalOpen && (
@@ -149,6 +185,19 @@ const ProductModal = () => {
                     className="w-full p-2.5 text-sm border rounded-lg focus:ring-blue-500 dark:bg-gray-600 dark:border-gray-500"
                     placeholder="Write product description here"
                   ></textarea>
+                </div>
+                <div className="col-span-2">
+                  <label htmlFor="image" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Image
+                  </label>
+                  <input
+                    type="file"
+                    name="image"
+                    id="image"
+                    onChange={handleFileChange}
+                    className="w-full p-2.5 text-sm border rounded-lg focus:ring-primary-600 dark:bg-gray-600 dark:border-gray-500"
+                    required
+                  />
                 </div>
               </div>
               <button

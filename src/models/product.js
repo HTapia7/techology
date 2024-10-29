@@ -8,24 +8,26 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true,
+    min: [0, "Price must be a positive number"], // Custom validation
   },
   description: {
     type: String,
-    required: true
+    required: true,
   },
   quantity: {
     type: Number,
-    required: true
-  }
-  // image: {
-  //   type: String,
-  //   required: true
-  // },
+    required: true,
+    min: [0, "Quantity must be a non-negative integer"], // Custom validation
+  },
+  image: {
+    type: String,
+    required: true,
+  },
 }, {
   timestamps: true,
 });
 
-
 const Product = mongoose.models.Product || mongoose.model("Product", productSchema);
 
 export default Product;
+
