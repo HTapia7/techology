@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true,
-    min: [0, "Price must be a positive number"], // Custom validation
+    min: [0, "Price must be a positive number"],
   },
   description: {
     type: String,
@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema({
   quantity: {
     type: Number,
     required: true,
-    min: [0, "Quantity must be a non-negative integer"], // Custom validation
+    min: [0, "Quantity must be a non-negative integer"], 
   },
   image: {
     type: String,

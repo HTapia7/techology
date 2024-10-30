@@ -8,7 +8,7 @@ interface FormData {
   price: string;
   quantity: string;
   description: string;
-  image: string; // Image field for the uploaded image's public ID
+  image: string;
 }
 
 const ProductModal = () => {

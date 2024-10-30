@@ -2,7 +2,7 @@ import { connect } from "@/dbConfig/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import Product from "@/models/product";
 
-// Make sure the database is connected
+
 connect();
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
